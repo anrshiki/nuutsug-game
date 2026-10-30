@@ -355,7 +355,9 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
           <div> <h3>{gamesPlayed}</h3> <p>Тоглосон</p> </div>
           <div> <h3>{wins}</h3> <p>Хожсон</p></div>
           <div> <h3>{streak}</h3> <p>Streaks</p></div>
-          <div> <h3>{winRate}</h3> <p>Win Rate</p></div> </div>
+          <div> <h3>{winRate}</h3> <p>Win Rate</p></div>
+          <div> <h3>{tries}</h3> <p>Оролдлогууд</p> </div>
+          </div>
           
           
           <button onClick={() => setShowStats(false)}
