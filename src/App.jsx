@@ -95,12 +95,7 @@ function App() {
 
       alert("Амжилттай хууллаа!");
     };
-    const getScoreColor = (score) => {
-      if (score >= 80) return "#22c55e"; // ногоон
-      if (score >= 50) return "#eab308"; // шар
-      if (score >= 20) return "#f97316"; // улбар шар
-      return "#6b7280"; саарал
-    };
+
 
     const handleGuess = () => {
 
@@ -275,7 +270,10 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
             width: `${item.score}%`,
             height: "100%",
             borderRadius: "999px",
-            background: getScoreColor(item.score),
+            background: `linear-gradient(
+            90deg,
+            hsl(${item.score * 1.2}, 85%, 50%),
+            hsl(${item.score * 1.2}, 85%, 50%) )`,
             transition: "all 0.5s ease",
           }}
         />
