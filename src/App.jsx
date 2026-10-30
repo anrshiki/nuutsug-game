@@ -57,7 +57,7 @@ function App() {
     return Number(localStorage.getItem("tries")) || 0;
   });
   useEffect(() => { localStorage.setItem("tries", tries); }, [tries]);
-  
+
   const [isSolved, setIsSolved ] = useState(() => { return localStorage.getItem("isSolved") === "true"; });
   useEffect(() => { localStorage.setItem("wins", wins); }, [wins]);
   useEffect(() => { localStorage.setItem("isSolved", isSolved); }, [isSolved]);
@@ -346,11 +346,18 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
           }}
           >
           <h2 style={{ textAlign: "center" }}> Statistics </h2>
-          <p> Wins: {wins}</p>
-          <p> Games Played: {gamesPlayed}</p>
-          <p> Current Streak: {streak}</p>
-          <p> Max Streak: {maxStreak}</p>
-          <p> Win Rate: {winRate}%</p>
+          <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "10px",
+            marginTop: "10px",
+          }}> 
+          <div> <h3>{gamesPlayed}</h3> <p>Тоглосон</p> </div>
+          <div> <h3>{wins}</h3> <p>Хожсон</p></div>
+          <div> <h3>{streak}</h3> <p>Streaks</p></div>
+          <div> <h3>{winRate}</h3> <p>Win Rate</p></div> </div>
+          
           
           <button onClick={() => setShowStats(false)}
             style={{
