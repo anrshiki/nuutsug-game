@@ -283,7 +283,7 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
 </ul>
 
  {wins > 0 && (
-          <p> НУУЦ ҮГ: {currentWord.word}</p>
+          <p> НУУЦ ҮГ </p>
         )}
 
         {isSolved && (
