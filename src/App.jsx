@@ -53,7 +53,11 @@ function App() {
   const [darkMode, setDarkMode] = useState(() => { return localStorage.getItem("darkMode") === "true"; });
   useEffect(() => { localStorage.setItem("darkMode", darkMode); }, [darkMode]);
 
-  const [tries, setTries] = useState(0);
+  const [tries, setTries] = useState(() => { 
+    return Number(localStorage.getItem("tries")) || 0;
+  });
+  useEffect(() => { localStorage.setItem("tries", tries); }, [tries]);
+  
   const [isSolved, setIsSolved ] = useState(() => { return localStorage.getItem("isSolved") === "true"; });
   useEffect(() => { localStorage.setItem("wins", wins); }, [wins]);
   useEffect(() => { localStorage.setItem("isSolved", isSolved); }, [isSolved]);
