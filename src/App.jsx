@@ -331,13 +331,7 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
           >
           <div
           onClick={(e) => e.stopPropagation()}
-          style={{
-            background: darkMode ? "#222" : "#fff",
-            color: darkMode ? "#fff" : "#000",
-            padding: "20px",
-            borderRadius: "10px",
-            minWidth: "300px",
-          }}
+          
           style={{
             background: darkMode ? "#222" : "#fff",
             color: darkMode ? "#fff" : "#000",
