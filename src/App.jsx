@@ -151,6 +151,7 @@ const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
         style={{
           maxWidth: "600px",
           width: "100%",
+          boxSizing: "border-box"
           margin: "0 auto",
           padding: "25px",
           borderRadius: "20px",
