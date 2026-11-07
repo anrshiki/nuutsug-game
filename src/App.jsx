@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import wordsData from "./data/words.json";
+import {words} from "./data/words.js";
 
 function App() {  
   const [guess, setGuess] = useState("");
@@ -31,7 +31,8 @@ function App() {
   useEffect(() => { localStorage.setItem("wins", wins); }, [wins]);
 
   const today = new Date();
-  const dayNumber = today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
+  const startDate = new Date("2026-01-01");
+  const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
   const [inputFocused, setInputFocused] = useState(false);
   const [gamesPlayed, setGamesPlayed] = useState(() => { return Number(localStorage.getItem("gamesPlayed")) || 0; });
@@ -63,7 +64,8 @@ function App() {
     }
   }, [todayKey]);
 
-  const currentWord = wordsData[dayNumber % wordsData.length];
+  const currentWord = words[diffDays% words.length];
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -172,7 +174,7 @@ function App() {
         }}> НУУЦ ҮГ</h1>
 
         {isSolved && (
-          <p style={{ textAlign: "center", color: "#4CAF50" }}> Баяр хүргэе! Маргааш шинэ үг өгөгдөнө.</p>
+          <p style={{ textAlign: "center", color: "#4CAF50" }}> Баяр хүргэе! Өнөөдрийн нууц үгийг таалаа. </p>
         )}
 
         <div style={{
@@ -249,8 +251,6 @@ function App() {
             </li>
           ))}
         </ul>
-
-        {isSolved && (
           <div style={{ 
             textAlign: "center",
             padding: "12px",
@@ -263,8 +263,6 @@ function App() {
             <div>Дараагийн үг гарах хүртэл</div>
             <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "5px" }}>{timeLeft}</div>
           </div>
-        )}
-        
         <div style={{ display: "flex", gap: "10px", marginTop: "20px", justifyContent: "center" }}>
           <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             {darkMode ? "☀️" : "🌙"}
@@ -280,7 +278,7 @@ function App() {
             📊 Статистик
           </button>
         </div>
-
+<p> Secret: {currentWord.word} </p>
         {showStats && (
           <div onClick={() => setShowStats(false)} style={{
             position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
@@ -310,6 +308,7 @@ function App() {
       </div>
       <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}>Nuuts Ug BETA v0.1</p>
     </div>
+  
   );
 }
 
