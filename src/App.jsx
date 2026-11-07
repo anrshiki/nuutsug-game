@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import {words} from "./data/words.js";
+import { supabase } from "./supabase";
+
 
 function App() {  
   const [guess, setGuess] = useState("");
@@ -9,6 +11,7 @@ function App() {
 
   const [showStats, setShowStats] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
+  const [leaders, setLeaders] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -27,6 +30,7 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect (() => { async function test() { const { data, error } = await supabase .from("players") .select("*") .order("wins", { ascending: false }); if (!error) {  setLeaders(data); } console.log(data); console.log(error);} test(); }, []);
   const [wins, setWins] = useState(() => { return Number(localStorage.getItem("wins")) || 0; });
   useEffect(() => { localStorage.setItem("wins", wins); }, [wins]);
 
@@ -66,6 +70,12 @@ function App() {
 
   const currentWord = words[diffDays% words.length];
 
+  const [username, setUsername] = useState(() => { return localStorage.getItem("username") || ""; });
+  const [showNameModal, setShowNameModal] = useState(() => { return !localStorage.getItem("username"); });
+
+
+
+
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -97,7 +107,28 @@ function App() {
     return null;
   };
 
-  const handleGuess = () => {
+const saveUsername = async () => {
+  if (!username.trim()) return;
+
+  const { data, error } = await supabase
+    .from("players")
+    .upsert({
+      username: username,
+      wins: 0,
+      streak: 0,
+      max_streak: 0
+    });
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
+  if (!error) {
+    localStorage.setItem("username", username);
+    setShowNameModal(false);
+  }
+};
+
+  const handleGuess = async () => {
     if (!guess) return;
 
     // Дүрмийн шалгалт ажиллуулах
@@ -114,7 +145,7 @@ function App() {
 
     if (score === 100) {
       message = "Зөв Таалаа!";
-      setWins(w => w + 1);
+      //setWins(w => w + 1);
       setStreak(s => {
         const newStreak = s + 1;
         if (newStreak > maxStreak) {
@@ -124,6 +155,21 @@ function App() {
       });
       setGamesPlayed(g => g + 1);
       setIsSolved(true);
+      
+      const newWins = wins + 1;
+
+      setWins(newWins);
+      const { data, error } = await supabase
+      .from("players")
+      .update({
+        wins: newWins
+      })
+      .eq("username", username)
+      .select();
+
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+
     } else if (score >= 80) {
       message = `Маш ойр (${score}%)`;
     } else if (score >= 30) {
@@ -154,6 +200,64 @@ function App() {
       backgroundColor: darkMode ? "#121212" : "#ffffff", 
       color: darkMode ? "#ffffff" : "#000000", 
     }}>
+      {showNameModal && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.7)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 999,
+    }}
+  >
+    <div
+      style={{
+        background: darkMode ? "#222" : "#fff",
+        color: darkMode ? "#fff" : "#000",
+        padding: "25px",
+        borderRadius: "12px",
+        width: "320px",
+        textAlign: "center",
+      }}
+    >
+      <h2>👋 Тавтай морил</h2>
+
+      <p>Leaderboard-д харагдах нэрээ оруулна уу</p>
+
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Жишээ: Bat-Erdene"
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginTop: "10px",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          boxSizing: "border-box",
+        }}
+      />
+
+      <button
+        onClick={saveUsername}
+        style={{
+          marginTop: "15px",
+          padding: "10px 20px",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+      >
+        Хадгалах
+      </button>
+    </div>
+  </div>
+)}
+
       <div style={{
         maxWidth: "600px",
         width: "100%",
@@ -177,17 +281,22 @@ function App() {
           <p style={{ textAlign: "center", color: "#4CAF50" }}> Баяр хүргэе! Өнөөдрийн нууц үгийг таалаа. </p>
         )}
 
-        <div style={{
-          textAlign: "center",
-          padding: "10px",
-          borderRadius: "12px",
-          background: darkMode ? "#333" : "#eee",
-          marginBottom: "15px",
-          fontSize: "18px",
-          fontWeight: "bold",
-        }}>Оноо: {wins}</div>
-        
-        <input
+        <div
+  style={{
+    textAlign: "center",
+    padding: "10px",
+    borderRadius: "12px",
+    background: darkMode ? "#333" : "#eee",
+    marginBottom: "15px",
+    fontSize: "18px",
+    fontWeight: "bold",
+  }}
+>
+  👤 {username}
+  <br />
+  Оноо: {wins}
+</div>
+          <input
           autoFocus
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
@@ -300,12 +409,40 @@ function App() {
                 position: "absolute", top: "10px", right: "10px", border: "none",
                 background: "transparent", color: darkMode ? "white" : "black", fontSize: "20px", cursor: "pointer",
               }}>X</button>
+              <h3 style={{ textAlign: "center", marginTop: "20px" }}>
+  🏆 Leaderboard
+</h3>
+
+{leaders.map((player, index) => (
+  <div
+    key={player.id}
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "6px 0",
+      borderBottom: "1px solid #444"
+    }}
+  >
+    <span>
+      {index === 0 ? "🥇" :
+       index === 1 ? "🥈" :
+       index === 2 ? "🥉" :
+       `${index + 1}.`}{" "}
+      {player.username}
+    </span>
+
+    <span>{player.wins}</span>
+  </div>
+))}
+
+
+
             </div>
           </div>
         )}
 
       </div>
-      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}>Nuuts Ug BETA v0.1</p>
+      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}>Nuuts Ug BETA v0.3</p>
     </div>
   
   );
