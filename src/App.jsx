@@ -277,8 +277,7 @@ function App() {
           <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             📊 Статистик
           </button>
-        </div>
-<p> Secret: {currentWord.word} </p>
+        </div> 
         {showStats && (
           <div onClick={() => setShowStats(false)} style={{
             position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
