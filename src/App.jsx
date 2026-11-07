@@ -380,6 +380,16 @@ const saveUsername = async () => {
               📤 Хуваалцах
             </button>
           )}
+          
+          <button
+          onClick={() => setShowLeaderboard(true)}
+          style={{
+            padding: "10px 15px",
+             borderRadius: "8px",
+             cursor: "pointer"
+             }}
+             > 🏆 Leaderboard </button>
+
 
           <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             📊 Статистик
@@ -451,7 +461,7 @@ const saveUsername = async () => {
                     </div>
                     </div>
                   )}
-                  
+
         </div> 
         {showStats && (
           <div onClick={() => setShowStats(false)} style={{
