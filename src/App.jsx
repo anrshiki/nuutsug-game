@@ -72,9 +72,7 @@ function App() {
 
   const [username, setUsername] = useState(() => { return localStorage.getItem("username") || ""; });
   const [showNameModal, setShowNameModal] = useState(() => { return !localStorage.getItem("username"); });
-
-
-
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
 
   const handleKeyDown = (e) => {
@@ -386,6 +384,74 @@ const saveUsername = async () => {
           <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             📊 Статистик
           </button>
+          
+          {showLeaderboard && (
+            <div
+            onClick={() => setShowLeaderboard(false)}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(0,0,0,0.7)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            >
+              <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: darkMode ? "#222" : "#fff",
+                color: darkMode ? "#fff" : "#000",
+                padding: "25px",
+                borderRadius: "12px",
+                minWidth: "320px",
+                position: "relative",
+              }}
+              >
+                <h2 style={{ textAlign: "center" }}> 🏆 Leaderboard </h2>
+                {leaders.map((player, index) => (
+                  <div
+                  key={player.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "8px 0",
+                    borderBottom: "1px solid #444"
+                  }}
+                  >
+                    <span>
+                      {index === 0
+                      ? "🥇"
+                      : index === 1
+                      ? "🥈"
+                      : index === 2
+                      ? "🥉"
+                      : `${index + 1}.`}{" "}
+                      {player.username}
+                      </span>
+                      <span>{player.wins}</span>
+                      </div>
+                    ))}
+                    <button
+                    onClick={() => setShowLeaderboard(false)}
+                    style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      border: "none",
+                      background: "transparent",
+                      color: darkMode ? "white" : "black",
+                      fontSize: "20px",
+                      cursor: "pointer",
+                    }}
+                    > X </button>
+                    </div>
+                    </div>
+                  )}
+                  
         </div> 
         {showStats && (
           <div onClick={() => setShowStats(false)} style={{
@@ -409,35 +475,8 @@ const saveUsername = async () => {
                 position: "absolute", top: "10px", right: "10px", border: "none",
                 background: "transparent", color: darkMode ? "white" : "black", fontSize: "20px", cursor: "pointer",
               }}>X</button>
-              <h3 style={{ textAlign: "center", marginTop: "20px" }}>
-  🏆 Leaderboard
-</h3>
-
-{leaders.map((player, index) => (
-  <div
-    key={player.id}
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "6px 0",
-      borderBottom: "1px solid #444"
-    }}
-  >
-    <span>
-      {index === 0 ? "🥇" :
-       index === 1 ? "🥈" :
-       index === 2 ? "🥉" :
-       `${index + 1}.`}{" "}
-      {player.username}
-    </span>
-
-    <span>{player.wins}</span>
-  </div>
-))}
-
-
-
-            </div>
+           
+           </div>
           </div>
         )}
 
