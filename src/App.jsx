@@ -377,7 +377,7 @@ const saveUsername = async () => {
           
           {isSolved && (
             <button onClick={handleShare} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
-              📤 Хуваалцах
+              📤 
             </button>
           )}
           
@@ -388,11 +388,11 @@ const saveUsername = async () => {
              borderRadius: "8px",
              cursor: "pointer"
              }}
-             > 🏆 Leaderboard </button>
+             > 🏆 </button>
 
 
           <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
-            📊 Статистик
+            📊
           </button>
           
           {showLeaderboard && (
