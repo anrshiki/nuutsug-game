@@ -402,8 +402,8 @@ const saveUsername = async () => {
               position: "fixed",
               top: 0,
               left: 0,
-              width: "100%",
-              height: "100%",
+              width: "90%",
+              height: "90%",
               background: "rgba(0,0,0,0.7)",
               display: "flex",
               justifyContent: "center",
@@ -417,7 +417,7 @@ const saveUsername = async () => {
                 color: darkMode ? "#fff" : "#000",
                 padding: "25px",
                 borderRadius: "12px",
-                minWidth: "320px",
+                minWidth: "200px",
                 position: "relative",
               }}
               >
