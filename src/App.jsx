@@ -524,7 +524,7 @@ style={{
                 color: darkMode ? "#fff" : "#000",
                 padding: "25px",
                 borderRadius: "12px",
-                minWidth: "300%",
+                minWidth: "300px",
                 maxHeight: "80px",
                 overflowY: "auto",
                 position: "relative",
@@ -579,7 +579,7 @@ style={{
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
               background: darkMode ? "#222" : "#fff", color: darkMode ? "#fff" : "#000",
-              padding: "25px", borderRadius: "12px", minWidth: "300%", position: "relative",
+              padding: "25px", borderRadius: "12px", minWidth: "300px", position: "relative",
             }}>
               <h2 style={{ textAlign: "center", marginBottom: "15px" }}>Статистик</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "15px", textAlign: "center" }}> 
