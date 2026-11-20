@@ -258,7 +258,7 @@ const saveUsername = async () => {
         color: darkMode ? "#fff" : "#000",
         padding: "25px",
         borderRadius: "12px",
-        width: "320%",
+        width: "320px",
         textAlign: "center",
       }}
     >
@@ -296,7 +296,7 @@ const saveUsername = async () => {
 )}
 
       <div style={{
-        maxWidth: "600%",
+        maxWidth: "600px",
         width: "100%",
         boxSizing: "border-box",
         margin: "0 auto",
@@ -412,10 +412,10 @@ style={{
   style={{
     marginTop: "15px",
     marginBottom: "15px",
-    padding: "12rpx",
+    padding: "12px",
     borderRadius: "12px",
     background: "#10B98122",
-    border: "1PX SOLID #10b981",
+    border: "1px SOLID #10b981",
     textAlign: "center",
   }}
   > ХАМГИЙН ОЙР ҮГ <br />
@@ -428,7 +428,7 @@ style={{
 
         <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
           {sortedHistory.map((item, index) => (
-            <li key={index} style={{ marginBottom: "12vh" }}>
+            <li key={index} style={{ marginBottom: "12px" }}>
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -477,7 +477,7 @@ style={{
             <div>Дараагийн үг гарах хүртэл</div>
             <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "5px" }}>{timeLeft}</div>
           </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "20rem", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: "10px", marginTop: "1.25rem", justifyContent: "center" }}>
           <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             {darkMode ? "☀️" : "🌙"}
           </button>
@@ -509,8 +509,8 @@ style={{
               position: "fixed",
               top: 0,
               left: 0,
-              width: "90px",
-              height: "90px",
+              width: "90%",
+              height: "90%",
               background: "rgba(0,0,0,0.7)",
               display: "flex",
               justifyContent: "center",
@@ -525,7 +525,7 @@ style={{
                 padding: "25px",
                 borderRadius: "12px",
                 minWidth: "300px",
-                maxHeight: "80px",
+                maxHeight: "80vh",
                 overflowY: "auto",
                 position: "relative",
               }}
