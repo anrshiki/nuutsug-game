@@ -324,7 +324,7 @@ const saveUsername = async () => {
     letterSpacing: "2px",
   }}
 >
-  <span style={{ color: "#F5F5F5" }}>
+  <span style={{ color: darkMode ? "#F5F5F5" : "#111111", }}>
     НУУЦ
   </span>
   <span style={{ color: "#10B981" }}>
