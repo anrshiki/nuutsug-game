@@ -708,6 +708,26 @@ style={{
                 >
                   <div
                   style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginBottom: "10px",
+                    }}
+                    >
+                      <button
+                      onClick={() => setShowProfile(false)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: darkMode ? "#fff" : "#000",
+                        fontSize: "28px",
+                        cursor: "pointer",
+                      }}
+                      >
+                        ✕
+                        </button>
+                        </div>
+                        <div
+                  style={{
                     textAlign: "center",
                     marginBottom: "20px",
                   }}
