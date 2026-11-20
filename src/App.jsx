@@ -509,12 +509,14 @@ style={{
               position: "fixed",
               top: 0,
               left: 0,
-              width: "90%",
-              height: "90%",
+              width: "100%",
+              height: "100%",
               background: "rgba(0,0,0,0.7)",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              padding: "20px",
+              zIndex: 999,
             }}
             >
               <div
@@ -522,23 +524,35 @@ style={{
               style={{
                 background: darkMode ? "#121212" : "#fff",
                 color: darkMode ? "#fff" : "#000",
+                width: "100%",
+                maxWidth: "420px",
+                height: "70px",
                 padding: "25px",
                 borderRadius: "12px",
-                minWidth: "300px",
-                maxHeight: "80vh",
-                overflowY: "auto",
                 position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                boxShadow: "0 0 30px rgba(16,485,129,0.15)",
+                border: "1px solid #10B98133",
               }}
               >
                 <h2 style={{ textAlign: "center" }}> 🏆 Leaderboard </h2>
+                <div
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  marginTop: "15px",
+                  paddingRight: "6px",
+                }}>
                 {leaders.map((player, index) => (
                   <div
                   key={player.id}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    padding: "8px 0",
-                    borderBottom: "1px solid #444"
+                    alignItems: "center",
+                    padding: "10px 12px",
+                    borderBottom: "1px solid #333"
                   }}
                   >
                     <span>
@@ -567,6 +581,7 @@ style={{
                       cursor: "pointer",
                     }}
                     > X </button>
+                    </div>
                     </div>
                     </div>
                   )}
