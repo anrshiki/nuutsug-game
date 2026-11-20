@@ -232,7 +232,7 @@ const saveUsername = async () => {
 
   return (
     <div style={{ 
-      padding: "15rem", 
+      padding: "15px", 
       minHeight: "100vh", 
       backgroundColor: darkMode ? "#090909" : "#ffffff", 
       color: darkMode ? "#ffffff" : "#000000", 
@@ -256,7 +256,7 @@ const saveUsername = async () => {
       style={{
         background: darkMode ? "#222" : "#fff",
         color: darkMode ? "#fff" : "#000",
-        padding: "25rem",
+        padding: "25px",
         borderRadius: "12px",
         width: "320%",
         textAlign: "center",
@@ -272,7 +272,7 @@ const saveUsername = async () => {
         placeholder="Жишээ: Bat-Erdene"
         style={{
           width: "100%",
-          padding: "10rem",
+          padding: "10px",
           marginTop: "10px",
           borderRadius: "8px",
           border: "1px solid #ccc",
@@ -284,7 +284,7 @@ const saveUsername = async () => {
         onClick={saveUsername}
         style={{
           marginTop: "15px",
-          padding: "10rem 20rem",
+          padding: "10px 20px",
           borderRadius: "8px",
           cursor: "pointer",
         }}
@@ -300,7 +300,7 @@ const saveUsername = async () => {
         width: "100%",
         boxSizing: "border-box",
         margin: "0 auto",
-        padding: "25rem",
+        padding: "25px",
         borderRadius: "20px",
         backgroundColor: darkMode ? "#121212" : "#f8f8f8",
         boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
@@ -333,8 +333,8 @@ style={{
   src="leaf-logo.png"
   alt="NUUTS UG"
   style={{
-    width: "62%",
-    height: "62vh",
+    width: "62px",
+    height: "62px",
     objectFit: "contain",
     filter: "drop-shadow( 0 0 12px rgba(16,185,129,0.25))",
   }}
@@ -352,7 +352,7 @@ style={{
     background: darkMode ? "#181818" : "#eee",
     border: darkMode ? "1px solid #232323" : "none",
     marginBottom: "15px",
-    fontSize: "18rem",
+    fontSize: "18px",
     fontWeight: "bold",
   }}
 >
@@ -366,8 +366,8 @@ style={{
           onBlur={() => setInputFocused(false)}
           style={{
             width: "100%",
-            padding: "14vh",
-            fontSize: "18rem",
+            padding: "14px",
+            fontSize: "18px",
             borderRadius: "12px",
             backgroundColor: darkMode ? "#333" : "#fff",
             color: darkMode ? "#fff" : "#000",
@@ -385,8 +385,8 @@ style={{
         
       <div
       style={{
-        marginTop: "15vh",
-        padding: "12rem",
+        marginTop: "15px",
+        padding: "12px",
         borderRadius: "12px",
         background: darkMode ? "#181818" : "#f3f4f6",
         border: darkMode ? "1px solid #232323" : "1px solid #ddd",
@@ -403,7 +403,7 @@ style={{
         <p style={{
           textAlign: "center",
           fontWeight: "bold",
-          fontSize: "18rem",
+          fontSize: "18px",
           margin: "15vh",
         }}>{result}</p>
 
@@ -412,7 +412,7 @@ style={{
   style={{
     marginTop: "15vh",
     marginBottom: "15vh",
-    padding: "12rem",
+    padding: "12rpx",
     borderRadius: "12px",
     background: "#10B98122",
     border: "1PX SOLID #10b981",
@@ -432,7 +432,7 @@ style={{
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginBottom: "4vh",
+                marginBottom: "4px",
                 fontWeight: "bold",
               }}>
                 <span>{item.word}</span>
@@ -466,24 +466,24 @@ style={{
         </ul>
           <div style={{ 
             textAlign: "center",
-            padding: "12rem",
+            padding: "12px",
             borderRadius: "12px",
             background: darkMode ? "#181818" : "#eee",
             border: darkMode ? "1px solid #232323" : "none",
             marginTop: "15px",
             fontWeight: "bold",
-            fontSize: "18rem",
+            fontSize: "18px",
           }}>
             <div>Дараагийн үг гарах хүртэл</div>
             <div style={{ fontSize: "22rem", fontWeight: "bold", marginTop: "5rem" }}>{timeLeft}</div>
           </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "20rem", justifyContent: "center" }}>
-          <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
+          <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             {darkMode ? "☀️" : "🌙"}
           </button>
           
           {isSolved && (
-            <button onClick={handleShare} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
+            <button onClick={handleShare} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
               📤 
             </button>
           )}
@@ -491,14 +491,14 @@ style={{
           <button
           onClick={() => setShowLeaderboard(true)}
           style={{
-            padding: "10rem 15rem",
+            padding: "10px 15px",
              borderRadius: "8px",
              cursor: "pointer"
              }}
              > 🏆 </button>
 
 
-          <button onClick={() => setShowStats(true)} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
+          <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
             📊
           </button>
           
@@ -525,7 +525,7 @@ style={{
                 padding: "25px",
                 borderRadius: "12px",
                 minWidth: "300%",
-                maxHeight: "80vh",
+                maxHeight: "80px",
                 overflowY: "auto",
                 position: "relative",
               }}
@@ -537,7 +537,7 @@ style={{
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    padding: "8rem 0",
+                    padding: "8px 0",
                     borderBottom: "1px solid #444"
                   }}
                   >
@@ -563,7 +563,7 @@ style={{
                       border: "none",
                       background: "transparent",
                       color: darkMode ? "white" : "black",
-                      fontSize: "20rem",
+                      fontSize: "20px",
                       cursor: "pointer",
                     }}
                     > X </button>
@@ -579,7 +579,7 @@ style={{
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
               background: darkMode ? "#222" : "#fff", color: darkMode ? "#fff" : "#000",
-              padding: "25rem", borderRadius: "12px", minWidth: "300%", position: "relative",
+              padding: "25px", borderRadius: "12px", minWidth: "300%", position: "relative",
             }}>
               <h2 style={{ textAlign: "center", marginBottom: "15px" }}>Статистик</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "15px", textAlign: "center" }}> 
@@ -592,7 +592,7 @@ style={{
               
               <button onClick={() => setShowStats(false)} style={{
                 position: "absolute", top: "10px", right: "10px", border: "none",
-                background: "transparent", color: darkMode ? "white" : "black", fontSize: "20rem", cursor: "pointer",
+                background: "transparent", color: darkMode ? "white" : "black", fontSize: "20px", cursor: "pointer",
               }}>X</button>
            
            </div>
