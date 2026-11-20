@@ -424,7 +424,20 @@ style={{
   ({bestGuess.score}%)
   </div>
 )}
-<h3 style={{ marginTop: "20px", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
+
+<h3 style={{
+  marginTop: "20px",
+  marginBottom: "15px",
+  color: "#10B981",
+  fontSize: "14px",
+  fontWeight: "700",
+  letterSpacing: "1px",
+  textTransform: "uppercase",
+  whiteSpace: "nowrap",
+  }}
+  >
+    Хамгийн ойр таамгууд
+    </h3>
 
         <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
           {sortedHistory.map((item, index) => (
@@ -526,7 +539,7 @@ style={{
                 color: darkMode ? "#fff" : "#000",
                 width: "100%",
                 maxWidth: "420px",
-                height: "70px",
+                maxHeight: "70vh",
                 padding: "25px",
                 borderRadius: "12px",
                 position: "relative",
@@ -536,12 +549,22 @@ style={{
                 border: "1px solid #10B98133",
               }}
               >
-                <h2 style={{ textAlign: "center" }}> 🏆 Leaderboard </h2>
+                <h2 style={{
+                  textAlign: "center",
+                  color: "#10B981",
+                  marginBottom: "15px",
+                  borderBottom: "1px solid #10B98133",
+                  paddingBottom: "10px"
+                }}
+                >
+                  🏆 Leaderboard
+                </h2>
                 <div
                 style={{
                   flex: 1,
                   overflowY: "auto",
                   marginTop: "15px",
+                  maxHeight: "50vh",
                   paddingRight: "6px",
                 }}>
                 {leaders.map((player, index) => (
