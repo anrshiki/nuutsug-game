@@ -38,6 +38,12 @@ function App() {
   const startDate = new Date("2026-01-01");
   const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
+  const [showProfile, setShowProfile] = useState(false);
+  <style> {`
+    @keyframes slideUp {
+    from { transform: translateY(100%);}
+    to { transform: translateY(0%);} } `} </style>
+
   const [inputFocused, setInputFocused] = useState(false);
   const [gamesPlayed, setGamesPlayed] = useState(() => { return Number(localStorage.getItem("gamesPlayed")) || 0; });
   useEffect(() => { localStorage.setItem("gamesPlayed", gamesPlayed); }, [gamesPlayed]);
@@ -239,6 +245,19 @@ const saveUsername = async () => {
     (a, b) => b.score - a.score 
   );
 
+  const myRank =
+  leaders.findIndex(
+    player => player.username === username
+  ) + 1;
+  const playerAbove =
+  myRank > 1
+  ? leaders[myRank - 2]
+  : null;
+  const pointNeeded =
+  playerAbove
+  ? playerAbove.score - score + 1
+  : 0;
+
   return (
     <div style={{ 
       padding: "15px", 
@@ -324,7 +343,7 @@ const saveUsername = async () => {
     letterSpacing: "2px",
   }}
 >
-  <span style={{ color: darkMode ? "#F5F5F5" : "#111111", }}>
+  <span style={{ color: darkMode ? "#F8FAFC" : "#111827", }}>
     НУУЦ
   </span>
   <span style={{ color: "#10B981" }}>
@@ -454,34 +473,59 @@ style={{
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginBottom: "4px",
+                marginBottom: "6px",
                 fontWeight: "bold",
               }}>
-                <span>{item.word}</span>
-                <span>{item.score}%</span>
+                <span
+                style={{ color: item.score >= 80 ? "#10B981" : undefined,}}>{item.word}</span>
+                <span
+                style={{ color: item.score >= 80 ? "#10B981" : undefined,}}>{item.score}%</span>
               </div>
 
               <div style={{
-                width: "100px",
-                height: "14px",
-                background: darkMode ? "#333" : "#ddd",
+                width: "100%",
+                height: "18px",
+                background: darkMode ? "#232323" : "#ddd",
                 borderRadius: "999px",
                 overflow: "hidden",
+                marginTop: "4px",
               }}>
                 <div style={{
                   width: `${item.score}%`,
                   height: "100%",
                   borderRadius: "999px",
                   background:
-                  item.score >= 80
-                  ? "#10B981"
+                  item.score >= 90
+                  ? "linear-gradient(90deg, #10B981, #34D399)"
+                  : item.score >= 75
+                  ? "linear-gradient(90deg, #22C55E, #86EFAC)"
                   : item.score >= 50
-                  ? "#34D399"
+                  ? "linear-gradient(90deg, #6EE7B7, #A7F3D0)"
                   : item.score >= 25
-                  ? "#6EE7B7"
-                  : "#374151",
+                  ? "linear-gradient(90deg, #F59E0B, #FCD34D)"
+                  : "#4B5563",
                   transition: "all 0.5s ease",
-                }} />
+                  boxShadow:
+                  item.score >= 50
+                  ? `
+                  inset 0 2px 4px rgba(255,255,255,0.35),
+                  inset 0 -2px 4px rgba(0,0,0,0.25),
+                  0 0 10px rgba(16,185,129,0.4)`
+                  : "none",
+                  position: "relative",
+                  overflow: "hidden",
+                }} >
+                  <div
+                  style={{
+                    position: "absolute",
+                    top: "2px",
+                    left: "4px",
+                    right: "4px",
+                    height: "35%",
+                    borderRadius: "999px",
+                    background: "linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.05))",
+                  }}></div>
+              </div>
               </div>
             </li>
           ))}
@@ -518,6 +562,194 @@ style={{
              cursor: "pointer"
              }}
              > 🏆 </button>
+
+             {showProfile && (
+              <div
+              onClick={() => setShowProfile(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                display: "flex",
+                alignItems: "flex-end",
+                zIndex: 1000,
+              }}
+              >
+                <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  width: "100%",
+                  height: "92vh",
+                  background: darkMode ? "#121212" : "#fff",
+                  color: darkMode ? "#fff" : "#000",
+                  borderTopLeftRadius: "24px",
+                  borderTopRightRadius: "24px",
+                  padding: "24px",
+                  boxSizing: "border-box",
+                  overFlow: "auto",
+                  boxShadow: "0 -10px 40px rgba(16,185,129,0.15)",
+                  animation: "slideUp 0.3s ease-out",
+
+                }}
+                >
+                  <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "20px",
+                  }}
+                  >
+                    <div
+                    style={{ fontSize: "48px"}}> 
+                    🍃
+                    </div>
+                    <h2 style={{ margin: "10px 0"}}>
+                      {username}
+                    </h2>
+                    <div
+                    style={{
+                      color: "#10B981",
+                      fontWeight: "bold",
+                    }}
+                    > Rank #{myRank}
+                    </div>
+                  </div>
+                  <div
+                style={{
+                  textAlign: "center",
+                  marginTop: "10px",
+                }}
+                >
+                  <h3>{username}</h3>
+                  <div
+  style={{
+	textAlign: "center",
+	marginBottom: "20px",
+  }}
+>
+  <h2
+	style={{
+  	margin: "10px 0",
+	}}
+  >
+	{username}
+  </h2>
+  <div
+	style={{
+  	fontSize: "32px",
+  	fontWeight: "bold",
+  	color: "#10B981",
+	}}
+  >
+	#{myRank}
+  </div>
+  <div
+	style={{
+  	opacity: 0.7,
+	}}
+  >
+	Leaderboard Rank
+  </div>
+</div>
+
+<div
+  style={{
+	display: "grid",
+	gridTemplateColumns: "repeat(2, 1fr)",
+	gap: "12px",
+	marginTop: "20px",
+  }}
+>
+  <div
+	style={{
+  	background: darkMode ? "#181818" : "#f8f8f8",
+  	padding: "22px",
+  	borderRadius: "16px",
+  	textAlign: "center",
+
+    boxShadow: "0 4px 20px rgba( 0,0,0,0.25)",
+    border: "1px solid rgba(16,185,129,0.1)",
+	}}
+  >
+	<div style={{ fontSize: "28px" }}>🏆</div>
+	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{score}</div>
+	<div style={{ opacity: 0.7 }}>Оноо</div>
+  </div>
+  <div
+	style={{
+  	background: darkMode ? "#181818" : "#f8f8f8",
+  	padding: "22px",
+  	borderRadius: "16px",
+  	textAlign: "center",
+    boxShadow: "0 4px 20px rgba( 0,0,0,0.25)",
+    border: "1px solid rgba(16,185,129,0.1)",
+	}}
+  >
+	<div style={{ fontSize: "28px" }}>✅</div>
+	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{wins}</div>
+	<div style={{ opacity: 0.7 }}>Хожил</div>
+  </div>
+  <div
+	style={{
+  	background: darkMode ? "#181818" : "#f8f8f8",
+  	padding: "22px",
+  	borderRadius: "16px",
+  	textAlign: "center",
+    boxShadow: "0 4px 20px rgba( 0,0,0,0.25)",
+    border: "1px solid rgba(16,185,129,0.1)",
+	}}
+  >
+	<div style={{ fontSize: "28px" }}>🔥</div>
+	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{streak}</div>
+	<div style={{ opacity: 0.7 }}>Streak</div>
+  </div>
+  <div
+	style={{
+  	background: darkMode ? "#181818" : "#f8f8f8",
+  	padding: "22px",
+  	borderRadius: "16px",
+  	textAlign: "center",
+    boxShadow: "0 4px 20px rgba( 0,0,0,0.25)",
+    border: "1px solid rgba(16,185,129,0.1)",
+	}}
+  >
+	<div style={{ fontSize: "28px" }}>👑</div>
+	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{maxStreak}</div>
+	<div style={{ opacity: 0.7 }}>Best</div>
+  </div>
+</div>
+
+
+
+              </div>
+              {playerAbove && (
+                <div
+                style={{
+                  marginTop: "25px",
+                  padding: "15px",
+                  borderRadius: "12px",
+                  background: "#10B98122",
+                  border: "1px solid #10B98155",
+                }}
+                >
+                  <strong>Дараагийн байр:</strong>
+                  <br /> {playerAbove.username}<br />
+                  Зөрүү: {pointsNeeded} оноо
+                  </div>
+              )}
+              </div>
+              </div>
+             )}
+
+             <button
+             onClick={() => setShowProfile(true)}
+             style={{
+              padding: "10px 15px",
+              borderRadius: "8px",
+              cursor: "pointer"
+             }}
+             >
+              👤
+             </button>
 
 
           <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
@@ -648,6 +880,7 @@ style={{
         )}
 
       </div>
+      
       <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.4 </p>
     </div>
   
