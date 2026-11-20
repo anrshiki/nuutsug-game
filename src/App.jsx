@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {words} from "./data/words.js";
+import { words } from "./data/words.js";
 import { supabase } from "./supabase";
 
 
@@ -57,13 +57,19 @@ function App() {
   const [isSolved, setIsSolved] = useState(() => { return localStorage.getItem("isSolved") === "true"; });
   useEffect(() => { localStorage.setItem("isSolved", isSolved); }, [isSolved]);
 
+  const [hasPlayedToday, setHasPlayedToday] = useState(() => {
+    return localStorage.getItem("hasPlayedToday") === "true";  });
+    useEffect(() => {
+      localStorage.setItem("hasPlayedToday", hasPlayedToday);    }, [hasPlayedToday]);
   const todayKey = new Date().toLocaleDateString();
   useEffect(() => { 
     const savedDate = localStorage.getItem("lastPlayedDate");
     if (savedDate !== todayKey) { 
+      setGamesPlayed(g => g + 1);
       setIsSolved(false);
       setHistory([]);
       setTries(0);
+      setHasPlayedToday(false);
       localStorage.setItem("lastPlayedDate", todayKey);
     }
   }, [todayKey]);
@@ -82,9 +88,15 @@ function App() {
   };
   
   const handleShare = async () => {
-    const shareText = `Нууц Үг\n\nОноо: ${wins}\nStreak: ${streak}\nОролдлого: ${tries}\n\nБи өнөөдрийн нууц үгийг таасан!`;
+    const shareText = `🍃 NUUTS UG
+✅ Өнөөдрийн нууц үгийг таалаа!
+🎯 Оролдлого: ${tries}
+🔥 Streak: ${streak}
+🏆 Нийт хожил: ${wins}
+`;
+
     await navigator.clipboard.writeText(shareText);
-    alert("Амжилттай хууллаа!");
+    alert("📋 Үр дүн clipboard-д хууллаа!");
   };
 
   // Дүрмийн шалгалт (Холбоо үг, үйл үг зэргийг шалгах хэсэг)
@@ -97,7 +109,7 @@ function App() {
     }
     
     // 2. Үйл үг төгсгөл шалгах
-    const verbEndings = ["эх", "ах", "иг", "өг", "уух", "ийх", "ч"];
+    const verbEndings = ["эх", "ах", "өг", "уух", "ийх"];
     if (verbEndings.some(ending => trimmed.endsWith(ending))) {
       return "Үйл үг оруулах хориотой!";
     }
@@ -129,6 +141,20 @@ const saveUsername = async () => {
   const handleGuess = async () => {
     if (!guess) return;
 
+    if (!hasPlayedToday) {
+      setGamesPlayed(g => g + 1);
+      setHasPlayedToday(true);
+    }
+
+    const normalizedGuess = guess.trim().toLowerCase();
+    const exists = history.some(
+      item => item.word.toLowerCase() === guess.toLowerCase()
+    );
+    if (exists) {
+      setResult("⚠️ Энэ үгийг өмнө нь оруулсан байна.");
+      return;
+    }
+
     // Дүрмийн шалгалт ажиллуулах
     const validationError = validateWord(guess);
     if (validationError) {
@@ -157,10 +183,15 @@ const saveUsername = async () => {
       const newWins = wins + 1;
 
       setWins(newWins);
+
+      const currentStreak = streak + 1;
+      const currentMaxStreak = Math.max(maxStreak, currentStreak);
       const { data, error } = await supabase
       .from("players")
       .update({
-        wins: newWins
+        wins: newWins,
+        streak: currentStreak,
+        max_streak: currentMaxStreak,
       })
       .eq("username", username)
       .select();
@@ -190,12 +221,20 @@ const saveUsername = async () => {
   };
 
   const winRate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0;
+  const bestGuess =
+  history.length > 0
+  ? history.reduce((max, item) => 
+  item.score > max.score ? item : max )
+  : null;
+  const sortedHistory = [...history].sort(
+    (a, b) => b.score - a.score 
+  );
 
   return (
     <div style={{ 
       padding: "15px", 
       minHeight: "100vh", 
-      backgroundColor: darkMode ? "#121212" : "#ffffff", 
+      backgroundColor: darkMode ? "#090909" : "#ffffff", 
       color: darkMode ? "#ffffff" : "#000000", 
     }}>
       {showNameModal && (
@@ -263,20 +302,46 @@ const saveUsername = async () => {
         margin: "0 auto",
         padding: "25px",
         borderRadius: "20px",
-        backgroundColor: darkMode ? "#1e1e1e" : "#f8f8f8",
+        backgroundColor: darkMode ? "#121212" : "#f8f8f8",
         boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
       }}>
         
-        <h1 style={{
-          textAlign: "center",
-          fontSize: "40px",
-          fontWeight: "bold",
-          marginBottom: "20px",
-          color: "inherit",
-        }}> НУУЦ ҮГ</h1>
-
+        <h1
+  style={{
+    textAlign: "center",
+    fontSize: "42px",
+    fontWeight: "900",
+    marginBottom: "0px",
+    letterSpacing: "2px",
+  }}
+>
+  <span style={{ color: "#F5F5F5" }}>
+    НУУЦ
+  </span>
+  <span style={{ color: "#10B981" }}>
+    ҮГ
+  </span>
+</h1>
+<div
+style={{
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "10px",
+}}
+>
+  <img
+  src="leaf-logo.png"
+  alt="NUUTS UG"
+  style={{
+    width: "62px",
+    height: "62px",
+    objectFit: "contain",
+    filter: "drop-shadow( 0 0 12px rgba(16,185,129,0.25))",
+  }}
+  />
+</div>
         {isSolved && (
-          <p style={{ textAlign: "center", color: "#4CAF50" }}> Баяр хүргэе! Өнөөдрийн нууц үгийг таалаа. </p>
+          <p style={{ textAlign: "center", color: "#10B981" }}> Баяр хүргэе! Өнөөдрийн нууц үгийг таалаа. </p>
         )}
 
         <div
@@ -284,7 +349,8 @@ const saveUsername = async () => {
     textAlign: "center",
     padding: "10px",
     borderRadius: "12px",
-    background: darkMode ? "#333" : "#eee",
+    background: darkMode ? "#181818" : "#eee",
+    border: darkMode ? "1px solid #232323" : "none",
     marginBottom: "15px",
     fontSize: "18px",
     fontWeight: "bold",
@@ -305,10 +371,10 @@ const saveUsername = async () => {
             borderRadius: "12px",
             backgroundColor: darkMode ? "#333" : "#fff",
             color: darkMode ? "#fff" : "#000",
-            border: "2px solid #4CAF50",
+            border: "2px solid #10B981",
             outline: "none",
             boxSizing: "border-box",
-            boxShadow: inputFocused ? "0 0 20px rgba(76, 175, 80, 0.7)" : "none",
+            boxShadow: inputFocused ? "0 0 20px rgba(16, 185, 129, 0.6)" : "none",
           }}
           disabled={isSolved}
           value={guess}
@@ -317,7 +383,22 @@ const saveUsername = async () => {
           placeholder="Нэр үг оруулна уу..."
         />
         
-        <p style={{ marginTop: "10px" }}>Оролдлогууд: {tries}</p>
+      <div
+      style={{
+        marginTop: "15px",
+        padding: "12px",
+        borderRadius: "12px",
+        background: darkMode ? "#181818" : "#f3f4f6",
+        border: darkMode ? "1px solid #232323" : "1px solid #ddd",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        }}
+        >
+          <span>🎯 {tries} оролдлого</span>
+          <span>🏆 {wins} хожил</span>
+          </div>
+
 
         <p style={{
           textAlign: "center",
@@ -326,9 +407,27 @@ const saveUsername = async () => {
           margin: "15px",
         }}>{result}</p>
 
-        <h3 style={{ marginTop: "20px", marginBottom: "15px" }}>Өмнөх бичигдсэн үгс</h3>
+{bestGuess && (
+  <div
+  style={{
+    marginTop: "15px",
+    marginBottom: "15px",
+    padding: "12px",
+    borderRadius: "12px",
+    background: "#10B98122",
+    border: "1PX SOLID #10b981",
+    textAlign: "center",
+  }}
+  > ХАМГИЙН ОЙР ҮГ <br />
+  <strong>{bestGuess.word}</strong>
+  {" "}
+  ({bestGuess.score}%)
+  </div>
+)}
+<h3 style={{ marginTop: "20px", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
+
         <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
-          {history.map((item, index) => (
+          {sortedHistory.map((item, index) => (
             <li key={index} style={{ marginBottom: "12px" }}>
               <div style={{
                 display: "flex",
@@ -351,7 +450,14 @@ const saveUsername = async () => {
                   width: `${item.score}%`,
                   height: "100%",
                   borderRadius: "999px",
-                  background: `hsl(${item.score * 1.2}, 85%, 50%)`,
+                  background:
+                  item.score >= 80
+                  ? "#10B981"
+                  : item.score >= 50
+                  ? "#34D399"
+                  : item.score >= 25
+                  ? "#6EE7B7"
+                  : "#374151",
                   transition: "all 0.5s ease",
                 }} />
               </div>
@@ -362,7 +468,8 @@ const saveUsername = async () => {
             textAlign: "center",
             padding: "12px",
             borderRadius: "12px",
-            background: darkMode ? "#333" : "#eee",
+            background: darkMode ? "#181818" : "#eee",
+            border: darkMode ? "1px solid #232323" : "none",
             marginTop: "15px",
             fontWeight: "bold",
             fontSize: "18px",
@@ -413,11 +520,13 @@ const saveUsername = async () => {
               <div
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: darkMode ? "#222" : "#fff",
+                background: darkMode ? "#121212" : "#fff",
                 color: darkMode ? "#fff" : "#000",
                 padding: "25px",
                 borderRadius: "12px",
-                minWidth: "200px",
+                minWidth: "300px",
+                maxHeight: "80vh",
+                overflowY: "auto",
                 position: "relative",
               }}
               >
@@ -491,7 +600,7 @@ const saveUsername = async () => {
         )}
 
       </div>
-      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}>Nuuts Ug BETA v0.3</p>
+      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.4 </p>
     </div>
   
   );
