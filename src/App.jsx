@@ -30,7 +30,7 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect (() => { async function test() { const { data, error } = await supabase .from("players") .select("*") .order("wins", { ascending: false }); if (!error) {  setLeaders(data); } console.log(data); console.log(error);} test(); }, []);
+  useEffect (() => { async function test() { const { data, error } = await supabase .from("players") .select("*") .order("score", { ascending: false }); if (!error) {  setLeaders(data); } console.log(data); console.log(error);} test(); }, []);
   const [wins, setWins] = useState(() => { return Number(localStorage.getItem("wins")) || 0; });
   useEffect(() => { localStorage.setItem("wins", wins); }, [wins]);
 
@@ -80,6 +80,14 @@ function App() {
   const [showNameModal, setShowNameModal] = useState(() => { return !localStorage.getItem("username"); });
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
+  const [score, setScore] = useState(() => {
+    return Number(localStorage.getItem("score")) || 0;
+  });
+
+  const earnedPoints = Math.max(
+    10 - Math.floor(tries / 5),
+    5
+  );
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -92,7 +100,8 @@ function App() {
 ✅ Өнөөдрийн нууц үгийг таалаа!
 🎯 Оролдлого: ${tries}
 🔥 Streak: ${streak}
-🏆 Нийт хожил: ${wins}
+💰 Нийт оноо: ${score}
+🏆 Хожил: ${wins}
 `;
 
     await navigator.clipboard.writeText(shareText);
@@ -109,7 +118,7 @@ function App() {
     }
     
     // 2. Үйл үг төгсгөл шалгах
-    const verbEndings = ["эх", "ах", "өг", "уух", "ийх"];
+    const verbEndings = [ ];
     if (verbEndings.some(ending => trimmed.endsWith(ending))) {
       return "Үйл үг оруулах хориотой!";
     }
@@ -358,7 +367,7 @@ style={{
 >
   👤 {username}
   <br />
-  Оноо: {wins}
+  Оноо: {score}
 </div>
           <input
           autoFocus
@@ -396,7 +405,7 @@ style={{
         }}
         >
           <span>🎯 {tries} оролдлого</span>
-          <span>🏆 {wins} хожил</span>
+          <span>💰 {score} оноо</span>
           </div>
 
 
@@ -415,7 +424,7 @@ style={{
     padding: "12px",
     borderRadius: "12px",
     background: "#10B98122",
-    border: "1px SOLID #10b981",
+    border: "1px solid #10b981",
     textAlign: "center",
   }}
   > ХАМГИЙН ОЙР ҮГ <br />
@@ -545,7 +554,7 @@ style={{
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
-                boxShadow: "0 0 30px rgba(16,485,129,0.15)",
+                boxShadow: "0 0 30px rgba(16,185,129,0.15)",
                 border: "1px solid #10B98133",
               }}
               >
@@ -588,7 +597,7 @@ style={{
                       : `${index + 1}.`}{" "}
                       {player.username}
                       </span>
-                      <span>{player.wins}</span>
+                      <span>{player.score}</span>
                       </div>
                     ))}
                     <button
@@ -626,6 +635,7 @@ style={{
                 <div><h3>{streak}</h3><p>Streak</p></div>
                 <div><h3>{winRate}%</h3><p>Win Rate</p></div>
                 <div><h3>{tries}</h3><p>Оролдлогууд</p></div>
+                <div><h3>{score}</h3><p>Оноо</p></div>
               </div>
               
               <button onClick={() => setShowStats(false)} style={{
