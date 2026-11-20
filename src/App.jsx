@@ -39,11 +39,6 @@ function App() {
   const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 
   const [showProfile, setShowProfile] = useState(false);
-  <style> {`
-    @keyframes slideUp {
-    from { transform: translateY(100%);}
-    to { transform: translateY(0%);} } `} </style>
-
   const [inputFocused, setInputFocused] = useState(false);
   const [gamesPlayed, setGamesPlayed] = useState(() => { return Number(localStorage.getItem("gamesPlayed")) || 0; });
   useEffect(() => { localStorage.setItem("gamesPlayed", gamesPlayed); }, [gamesPlayed]);
@@ -85,6 +80,24 @@ function App() {
   const [username, setUsername] = useState(() => { return localStorage.getItem("username") || ""; });
   const [showNameModal, setShowNameModal] = useState(() => { return localStorage.getItem("loggedIn") !== "true"; });
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  useEffect(() => {
+    const loadPlayer = async () => {
+      const savedUsername = localStorage.getItem("username");
+      if (!savedUsername) return;
+      const { data } = await supabase
+      .from("players")
+      .select("*")
+      .eq("username", savedUsername)
+      .single();
+      if (data) {
+        setWins(data.wins || 0);
+        setScore(data.score || 0);
+        setStreak(data.streak || 0);
+        setMaxStreak(data.max_streak || 0);
+    }
+  };
+loadPlayer();
+ }, []);
 
   const [pin, setPin] = useState("");
   const [isLogin, setIsLogin] = useState (true);
@@ -139,27 +152,7 @@ function App() {
 
     return null;
   };
-
-const saveUsername = async () => {
-  if (!username.trim()) return;
-
-  const { data, error } = await supabase
-    .from("players")
-    .upsert({
-      username: username,
-      wins: 0,
-      streak: 0,
-      max_streak: 0
-    });
-
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  if (!error) {
-    localStorage.setItem("username", username);
-    setShowNameModal(false);
-  }
-};
+  
 const handleRegister = async () => {
   if (!username.trim() || !pin.trim()) return;
 
@@ -186,10 +179,7 @@ const handleRegister = async () => {
       localStorage.setItem("username", username);
       localStorage.setItem("loggedIn", "true");
       setShowNameModal(false);
-      setWins(data.wins || 0);
-      setScore(data.score || 0);
-      setStreak(data.streak || 0);
-      setMaxStreak(data.max_streak || 0);
+      
     }
   };
   const handleLogin = async () => {
@@ -206,6 +196,10 @@ const handleRegister = async () => {
 
   localStorage.setItem("username", data.username);
   localStorage.setItem("loggedIn", "true");
+  setWins(data.wins || 0);
+  setScore(data.score || 0);
+  setStreak(data.streak || 0);
+  setMaxStreak(data.max_streak || 0);
   setShowNameModal(false);
 };
 
@@ -295,11 +289,11 @@ const handleChangeUsername = async () => {
       console.log("ERROR:", error);
 
     } else if (similarity >= 80) {
-      message = `Маш ойр (${score}%)`;
+      message = `Маш ойр (${similarity}%)`;
     } else if (similarity >= 30) {
-      message = `Ойртож байна (${score}%)`;
+      message = `Ойртож байна (${similarity}%)`;
     } else {
-      message = `Хол байна даа (${score}%)`;
+      message = `Хол байна даа (${similarity}%)`;
     }
 
     setResult(message);
@@ -307,7 +301,7 @@ const handleChangeUsername = async () => {
     setHistory([
       {
         word: guess,
-        score: score,
+        score: similarity,
       },
       ...history,
     ]);
