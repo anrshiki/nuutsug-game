@@ -96,6 +96,11 @@ function App() {
         setStreak(data.streak || 0);
         setMaxStreak(data.max_streak || 0);
     }
+    const today = new Date().toISOString().split("T")[0];
+    if (data.last_played_date === today) {
+      setIsSolved(true);
+      
+    }
   };
 loadPlayer();
  }, []);
@@ -210,6 +215,10 @@ const handleRegister = async () => {
       alert("❌ Username эсвэл PIN буруу байна.");
       return;
      }
+     const today = new Date().toISOString().split("T")[0];
+     if (data.last_played_date === today) {
+      setIsSolved(true);
+     }
 
   localStorage.setItem("username", data.username);
   localStorage.setItem("loggedIn", "true");
@@ -298,6 +307,7 @@ const handleChangeUsername = async () => {
         score: newScore,
         streak: currentStreak,
         max_streak: currentMaxStreak,
+        last_played_date: new Date().toISOString().split("T")[0],
       })
       .eq("username", username)
       .select();
@@ -887,16 +897,6 @@ style={{
                   localStorage.removeItem("loggedIn");
                   localStorage.removeItem("username");
 
-                  localStorage.removeItem("history");
-                  localStorage.removeItem("tries");
-                  localStorage.removeItem("isSolved");
-                  localStorage.removeItem("hasPlayedToday");
-
-                  setHistory([]);
-                  setTries(0);
-                  setIsSolved(false);
-                  setHasPlayedToday(false);
-
                   setShowProfile(false);
                   setShowNameModal(true);
                 }}
@@ -1120,7 +1120,7 @@ style={{
 
       </div>
       
-      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.7.1 </p>
+      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.7.3 </p>
     </div>
   
   );
