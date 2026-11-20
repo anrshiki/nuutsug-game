@@ -79,6 +79,7 @@ function App() {
 
   const [username, setUsername] = useState(() => { return localStorage.getItem("username") || ""; });
   const [showNameModal, setShowNameModal] = useState(() => { return localStorage.getItem("loggedIn") !== "true"; });
+  
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   useEffect(() => {
     const loadPlayer = async () => {
@@ -178,6 +179,22 @@ const handleRegister = async () => {
     if (!error) {
       localStorage.setItem("username", username);
       localStorage.setItem("loggedIn", "true");
+
+      setHistory([]);
+      setTries(0);
+      setIsSolved(false);
+      setHasPlayedToday(false);
+
+      setWins(0);
+      setScore(0);
+      setStreak(0);
+      setMaxStreak(0);
+
+      localStorage.removeItem("history");
+      localStorage.removeItem("tries");
+      localStorage.removeItem("isSolved");
+      localStorage.removeItem("hasPlayedToday");
+  
       setShowNameModal(false);
       
     }
@@ -869,6 +886,17 @@ style={{
                 onClick={() => {
                   localStorage.removeItem("loggedIn");
                   localStorage.removeItem("username");
+
+                  localStorage.removeItem("history");
+                  localStorage.removeItem("tries");
+                  localStorage.removeItem("isSolved");
+                  localStorage.removeItem("hasPlayedToday");
+
+                  setHistory([]);
+                  setTries(0);
+                  setIsSolved(false);
+                  setHasPlayedToday(false);
+
                   setShowProfile(false);
                   setShowNameModal(true);
                 }}
