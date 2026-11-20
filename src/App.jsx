@@ -404,14 +404,14 @@ style={{
           textAlign: "center",
           fontWeight: "bold",
           fontSize: "18px",
-          margin: "15vh",
+          margin: "15px",
         }}>{result}</p>
 
 {bestGuess && (
   <div
   style={{
-    marginTop: "15vh",
-    marginBottom: "15vh",
+    marginTop: "15px",
+    marginBottom: "15px",
     padding: "12rpx",
     borderRadius: "12px",
     background: "#10B98122",
@@ -424,9 +424,9 @@ style={{
   ({bestGuess.score}%)
   </div>
 )}
-<h3 style={{ marginTop: "20vh", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
+<h3 style={{ marginTop: "20px", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
 
-        <ul style={{ listStyle: "none", padding: 0, marginTop: "10vh" }}>
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
           {sortedHistory.map((item, index) => (
             <li key={index} style={{ marginBottom: "12vh" }}>
               <div style={{
@@ -440,15 +440,15 @@ style={{
               </div>
 
               <div style={{
-                width: "100%",
-                height: "14vh",
+                width: "100px",
+                height: "14px",
                 background: darkMode ? "#333" : "#ddd",
                 borderRadius: "999px",
                 overflow: "hidden",
               }}>
                 <div style={{
                   width: `${item.score}%`,
-                  height: "100vh",
+                  height: "100%",
                   borderRadius: "999px",
                   background:
                   item.score >= 80
@@ -475,7 +475,7 @@ style={{
             fontSize: "18px",
           }}>
             <div>Дараагийн үг гарах хүртэл</div>
-            <div style={{ fontSize: "22rem", fontWeight: "bold", marginTop: "5rem" }}>{timeLeft}</div>
+            <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "5px" }}>{timeLeft}</div>
           </div>
         <div style={{ display: "flex", gap: "10px", marginTop: "20rem", justifyContent: "center" }}>
           <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
@@ -509,8 +509,8 @@ style={{
               position: "fixed",
               top: 0,
               left: 0,
-              width: "90%",
-              height: "90vh",
+              width: "90px",
+              height: "90px",
               background: "rgba(0,0,0,0.7)",
               display: "flex",
               justifyContent: "center",
