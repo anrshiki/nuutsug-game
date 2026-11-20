@@ -83,12 +83,20 @@ function App() {
   const currentWord = words[diffDays% words.length];
 
   const [username, setUsername] = useState(() => { return localStorage.getItem("username") || ""; });
-  const [showNameModal, setShowNameModal] = useState(() => { return !localStorage.getItem("username"); });
+  const [showNameModal, setShowNameModal] = useState(() => { return localStorage.getItem("loggedIn") !== "true"; });
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+
+  const [pin, setPin] = useState("");
+  const [isLogin, setIsLogin] = useState (true);
+  const [showEditName, setShowEditName] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
 
   const [score, setScore] = useState(() => {
     return Number(localStorage.getItem("score")) || 0;
   });
+  useEffect(() => {
+    localStorage.setItem("score", score);
+  }, [score]);
 
   const earnedPoints = Math.max(
     10 - Math.floor(tries / 5),
@@ -152,6 +160,75 @@ const saveUsername = async () => {
     setShowNameModal(false);
   }
 };
+const handleRegister = async () => {
+  if (!username.trim() || !pin.trim()) return;
+
+  const { data: existing } = await supabase
+    .from("players")
+    .select("*")
+    .eq("username", username);
+    if (existing?.length > 0) {
+      alert("⚠️ Энэ нэр бүртгэлтэй байна.");
+      return;
+  }
+
+  const { error } = await supabase
+    .from("players")
+    .insert({
+      username,
+      pin,
+      wins: 0,
+      score: 0,
+      streak: 0,
+      max_streak: 0,
+    });
+    if (!error) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("loggedIn", "true");
+      setShowNameModal(false);
+      setWins(data.wins || 0);
+      setScore(data.score || 0);
+      setStreak(data.streak || 0);
+      setMaxStreak(data.max_streak || 0);
+    }
+  };
+  const handleLogin = async () => {
+  const { data } = await supabase
+    .from("players")
+    .select("*")
+    .eq("username", username)
+    .eq("pin", pin)
+    .single();
+    if (!data) {
+      alert("❌ Username эсвэл PIN буруу байна.");
+      return;
+     }
+
+  localStorage.setItem("username", data.username);
+  localStorage.setItem("loggedIn", "true");
+  setShowNameModal(false);
+};
+
+const handleChangeUsername = async () => {
+  if (!newUsername.trim()) return;
+  const { data: existing } = await supabase
+  .from("players")
+  .select("*")
+  .eq("username", newUsername);
+  if (existing?.length > 0) {
+    alert ("🚨 Энэ нэр ашиглагдаж байна.");
+    return;
+  }
+  const { error } = await supabase
+  .from("players")
+  .update({ username: newUsername, })
+  .eq("username", username);
+  if (!error) {
+    localStorage.setItem("username", newUsername);
+    setUsername(newUsername);
+    setShowEditName(false);
+  }
+};
 
   const handleGuess = async () => {
     if (!guess) return;
@@ -179,10 +256,10 @@ const saveUsername = async () => {
 
     setTries(t => t + 1);
 
-    const score = currentWord?.scores?.[guess.toLowerCase()] || 0; 
+    const similarity = currentWord?.scores?.[guess.toLowerCase()] || 0; 
     let message = "";
 
-    if (score === 100) {
+    if (similarity === 100) {
       message = "Зөв Таалаа!";
       //setWins(w => w + 1);
       setStreak(s => {
@@ -196,8 +273,10 @@ const saveUsername = async () => {
       setIsSolved(true);
       
       const newWins = wins + 1;
-
       setWins(newWins);
+
+      const newScore = score + earnedPoints;
+      setScore(newScore);
 
       const currentStreak = streak + 1;
       const currentMaxStreak = Math.max(maxStreak, currentStreak);
@@ -205,6 +284,7 @@ const saveUsername = async () => {
       .from("players")
       .update({
         wins: newWins,
+        score: newScore,
         streak: currentStreak,
         max_streak: currentMaxStreak,
       })
@@ -214,9 +294,9 @@ const saveUsername = async () => {
       console.log("DATA:", data);
       console.log("ERROR:", error);
 
-    } else if (score >= 80) {
+    } else if (similarity >= 80) {
       message = `Маш ойр (${score}%)`;
-    } else if (score >= 30) {
+    } else if (similarity >= 30) {
       message = `Ойртож байна (${score}%)`;
     } else {
       message = `Хол байна даа (${score}%)`;
@@ -245,10 +325,14 @@ const saveUsername = async () => {
     (a, b) => b.score - a.score 
   );
 
-  const myRank =
+  const rankIndex =
   leaders.findIndex(
     player => player.username === username
-  ) + 1;
+  );
+  const myRank = 
+  rankIndex >= 0
+  ? rankIndex + 1
+  : "";
   const playerAbove =
   myRank > 1
   ? leaders[myRank - 2]
@@ -290,7 +374,11 @@ const saveUsername = async () => {
         textAlign: "center",
       }}
     >
-      <h2>👋 Тавтай морил</h2>
+      <h2
+      style={{
+        color: "#10B981",
+        marginBottom: "10px"
+      }}>👋 НАЙН УУ👋 </h2>
 
       <p>Leaderboard-д харагдах нэрээ оруулна уу</p>
 
@@ -308,8 +396,39 @@ const saveUsername = async () => {
         }}
       />
 
+      <input
+      type="password"
+      value={pin}
+      onChange={(e) => setPin(e.target.value)}
+      placeholder="4 оронтой PIN"
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginTop: "10px",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+        boxSizing: "border-box",
+      }}
+      />
+      <p
+      style={{
+        cursor: "pointer",
+        marginTop: "10px",
+        color: "#10B981",
+      }}
+      onClick={() => setIsLogin(!isLogin)}
+      >
+        {isLogin
+        ? "Шинэ хэрэглэгч үү? Бүртгүүлэх"
+        : "Бүртгэлтэй юу? Нэвтрэх"
+      }
+      </p>
+
       <button
-        onClick={saveUsername}
+        onClick={ isLogin
+          ? handleLogin
+          : handleRegister
+        }
         style={{
           marginTop: "15px",
           padding: "10px 20px",
@@ -317,7 +436,7 @@ const saveUsername = async () => {
           cursor: "pointer",
         }}
       >
-        Хадгалах
+        {isLogin ? "Нэвтрэх" : " Бүртгүүлэх "}
       </button>
     </div>
   </div>
@@ -487,7 +606,7 @@ style={{
                 height: "18px",
                 background: darkMode ? "#232323" : "#ddd",
                 borderRadius: "999px",
-                overflow: "hidden",
+                overflowY: "hidden",
                 marginTop: "4px",
               }}>
                 <div style={{
@@ -513,7 +632,7 @@ style={{
                   0 0 10px rgba(16,185,129,0.4)`
                   : "none",
                   position: "relative",
-                  overflow: "hidden",
+                  overflowY: "hidden",
                 }} >
                   <div
                   style={{
@@ -578,15 +697,16 @@ style={{
                 <div
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                  width: "100%",
-                  height: "92vh",
+                  width: "calc(100% - 24px)",
+                  height: "calc(100vh - 24px)",
+                  margin: "12px",
                   background: darkMode ? "#121212" : "#fff",
                   color: darkMode ? "#fff" : "#000",
                   borderTopLeftRadius: "24px",
                   borderTopRightRadius: "24px",
-                  padding: "24px",
+                  padding: "30px 24px",
                   boxSizing: "border-box",
-                  overFlow: "auto",
+                  overflowY: "auto",
                   boxShadow: "0 -10px 40px rgba(16,185,129,0.15)",
                   animation: "slideUp 0.3s ease-out",
 
@@ -599,16 +719,16 @@ style={{
                   }}
                   >
                     <div
-                    style={{ fontSize: "48px"}}> 
+                    style={{ fontSize: "52px", marginBottom: "50px", }}> 
                     🍃
                     </div>
-                    <h2 style={{ margin: "10px 0"}}>
-                      {username}
-                    </h2>
+                    <h3>{username}</h3>
                     <div
                     style={{
+                      fontSize: "42px",
                       color: "#10B981",
                       fontWeight: "bold",
+                      marginTop: "12px",
                     }}
                     > Rank #{myRank}
                     </div>
@@ -619,36 +739,13 @@ style={{
                   marginTop: "10px",
                 }}
                 >
-                  <h3>{username}</h3>
+                  
                   <div
   style={{
 	textAlign: "center",
 	marginBottom: "20px",
   }}
 >
-  <h2
-	style={{
-  	margin: "10px 0",
-	}}
-  >
-	{username}
-  </h2>
-  <div
-	style={{
-  	fontSize: "32px",
-  	fontWeight: "bold",
-  	color: "#10B981",
-	}}
-  >
-	#{myRank}
-  </div>
-  <div
-	style={{
-  	opacity: 0.7,
-	}}
-  >
-	Leaderboard Rank
-  </div>
 </div>
 
 <div
@@ -670,7 +767,7 @@ style={{
     border: "1px solid rgba(16,185,129,0.1)",
 	}}
   >
-	<div style={{ fontSize: "28px" }}>🏆</div>
+	<div style={{ fontSize: "28px", marginBottom: "12px" }}>🏆</div>
 	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{score}</div>
 	<div style={{ opacity: 0.7 }}>Оноо</div>
   </div>
@@ -684,7 +781,7 @@ style={{
     border: "1px solid rgba(16,185,129,0.1)",
 	}}
   >
-	<div style={{ fontSize: "28px" }}>✅</div>
+	<div style={{ fontSize: "28px",marginBottom: "12px" }}>✅</div>
 	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{wins}</div>
 	<div style={{ opacity: 0.7 }}>Хожил</div>
   </div>
@@ -698,7 +795,7 @@ style={{
     border: "1px solid rgba(16,185,129,0.1)",
 	}}
   >
-	<div style={{ fontSize: "28px" }}>🔥</div>
+	<div style={{ fontSize: "28px", marginBottom: "12px" }}>🔥</div>
 	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{streak}</div>
 	<div style={{ opacity: 0.7 }}>Streak</div>
   </div>
@@ -712,7 +809,7 @@ style={{
     border: "1px solid rgba(16,185,129,0.1)",
 	}}
   >
-	<div style={{ fontSize: "28px" }}>👑</div>
+	<div style={{ fontSize: "28px", marginBottom: "12px" }}>👑</div>
 	<div style={{ fontSize: "22px", fontWeight: "bold" }}>{maxStreak}</div>
 	<div style={{ opacity: 0.7 }}>Best</div>
   </div>
@@ -733,14 +830,107 @@ style={{
                 >
                   <strong>Дараагийн байр:</strong>
                   <br /> {playerAbove.username}<br />
-                  Зөрүү: {pointsNeeded} оноо
+                  Зөрүү: {pointNeeded} оноо
                   </div>
               )}
+              <button
+              onClick={() => {
+                setNewUsername(username);
+                setShowEditName(true);
+             }}
+             style={{
+              width: "100%",
+              marginTop: "20px",
+              padding: "12px",
+              borderRadius: "12px",
+              border: "none",
+              cursor: "pointer",
+              background: "#10B981",
+              color: "white",
+              fontWeight: "bold",
+             }}> 🔄 Нэр солих
+             </button>
+
+              <button
+                onClick={() => {
+                  localStorage.removeItem("loggedIn");
+                  localStorage.removeItem("username");
+                  setShowProfile(false);
+                  setShowNameModal(true);
+                }}
+                style={{
+                  width: "100%",
+                  marginTop: "20px",
+                  padding: "12px",
+                  borderRadius: "12px",
+                  border: "none",
+                  cursor: "pointer",
+                  background: "#ef4444",
+                  color: "white",
+                  fontWeight: "bold",
+                }}
+                > 🔒 ГАРАХ
+              </button>
               </div>
               </div>
              )}
-
-             <button
+             
+             {showEditName && (
+              <div
+              onClick={() => setShowEditName(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.7)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 2000,
+              }}>
+                <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: darkMode ? "#121212" : "#fff",
+                  color: darkMode ? "#fff" : "#000",
+                  padding: "24px",
+                  borderRadius: "16px",
+                  width: "320px",
+                }}
+                >
+                  <h3 style={{ color: "#10B981" }}>
+                    ✏️ Нэр солих
+                    </h3>
+                    <input
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    placeholder="Шинэ нэр"
+                    style={{
+                      width: "100%",
+                      padding: "10px",
+                      marginTop: "10px",
+                      borderRadius: "8px",
+                      boxSizing: "border-box",
+                    }}/>
+                    <button
+                    onClick={handleChangeUsername}
+                    style={{
+                      width: "100%",
+                      marginTop: "15px",
+                      padding: "12px",
+                      borderRadius: "10px",
+                      border: "none",
+                      background: "#10B981",
+                      color: "#fff",
+                      cursor: "pointer",
+                    }}
+                    >
+                      Хадгалах
+                      </button>
+                      </div>
+                      </div>
+                    )}
+            
+            <button
              onClick={() => setShowProfile(true)}
              style={{
               padding: "10px 15px",
@@ -853,8 +1043,15 @@ style={{
         </div> 
         {showStats && (
           <div onClick={() => setShowStats(false)} style={{
-            position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-            background: "rgba(0,0,0,0.7)", display: "flex", justifyContent: "center", alignItems: "center",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
               background: darkMode ? "#222" : "#fff", color: darkMode ? "#fff" : "#000",
@@ -881,7 +1078,7 @@ style={{
 
       </div>
       
-      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.4 </p>
+      <p style={{ textAlign: "center", opacity: 0.6, marginTop: "20px", fontSize: "12px" }}> 🍃 NUUTS UG • BETA v0.7.1 </p>
     </div>
   
   );
