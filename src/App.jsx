@@ -232,7 +232,7 @@ const saveUsername = async () => {
 
   return (
     <div style={{ 
-      padding: "15px", 
+      padding: "15rem", 
       minHeight: "100vh", 
       backgroundColor: darkMode ? "#090909" : "#ffffff", 
       color: darkMode ? "#ffffff" : "#000000", 
@@ -244,7 +244,7 @@ const saveUsername = async () => {
       top: 0,
       left: 0,
       width: "100%",
-      height: "100%",
+      height: "100vh",
       background: "rgba(0,0,0,0.7)",
       display: "flex",
       justifyContent: "center",
@@ -256,9 +256,9 @@ const saveUsername = async () => {
       style={{
         background: darkMode ? "#222" : "#fff",
         color: darkMode ? "#fff" : "#000",
-        padding: "25px",
+        padding: "25rem",
         borderRadius: "12px",
-        width: "320px",
+        width: "320%",
         textAlign: "center",
       }}
     >
@@ -272,7 +272,7 @@ const saveUsername = async () => {
         placeholder="Жишээ: Bat-Erdene"
         style={{
           width: "100%",
-          padding: "10px",
+          padding: "10rem",
           marginTop: "10px",
           borderRadius: "8px",
           border: "1px solid #ccc",
@@ -284,7 +284,7 @@ const saveUsername = async () => {
         onClick={saveUsername}
         style={{
           marginTop: "15px",
-          padding: "10px 20px",
+          padding: "10rem 20rem",
           borderRadius: "8px",
           cursor: "pointer",
         }}
@@ -296,11 +296,11 @@ const saveUsername = async () => {
 )}
 
       <div style={{
-        maxWidth: "600px",
+        maxWidth: "600%",
         width: "100%",
         boxSizing: "border-box",
         margin: "0 auto",
-        padding: "25px",
+        padding: "25rem",
         borderRadius: "20px",
         backgroundColor: darkMode ? "#121212" : "#f8f8f8",
         boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
@@ -333,8 +333,8 @@ style={{
   src="leaf-logo.png"
   alt="NUUTS UG"
   style={{
-    width: "62px",
-    height: "62px",
+    width: "62%",
+    height: "62vh",
     objectFit: "contain",
     filter: "drop-shadow( 0 0 12px rgba(16,185,129,0.25))",
   }}
@@ -352,7 +352,7 @@ style={{
     background: darkMode ? "#181818" : "#eee",
     border: darkMode ? "1px solid #232323" : "none",
     marginBottom: "15px",
-    fontSize: "18px",
+    fontSize: "18rem",
     fontWeight: "bold",
   }}
 >
@@ -366,8 +366,8 @@ style={{
           onBlur={() => setInputFocused(false)}
           style={{
             width: "100%",
-            padding: "14px",
-            fontSize: "18px",
+            padding: "14vh",
+            fontSize: "18rem",
             borderRadius: "12px",
             backgroundColor: darkMode ? "#333" : "#fff",
             color: darkMode ? "#fff" : "#000",
@@ -385,8 +385,8 @@ style={{
         
       <div
       style={{
-        marginTop: "15px",
-        padding: "12px",
+        marginTop: "15vh",
+        padding: "12rem",
         borderRadius: "12px",
         background: darkMode ? "#181818" : "#f3f4f6",
         border: darkMode ? "1px solid #232323" : "1px solid #ddd",
@@ -403,16 +403,16 @@ style={{
         <p style={{
           textAlign: "center",
           fontWeight: "bold",
-          fontSize: "18px",
-          margin: "15px",
+          fontSize: "18rem",
+          margin: "15vh",
         }}>{result}</p>
 
 {bestGuess && (
   <div
   style={{
-    marginTop: "15px",
-    marginBottom: "15px",
-    padding: "12px",
+    marginTop: "15vh",
+    marginBottom: "15vh",
+    padding: "12rem",
     borderRadius: "12px",
     background: "#10B98122",
     border: "1PX SOLID #10b981",
@@ -424,15 +424,15 @@ style={{
   ({bestGuess.score}%)
   </div>
 )}
-<h3 style={{ marginTop: "20px", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
+<h3 style={{ marginTop: "20vh", marginBottom: "15px", color: "#10B981", }}> 🍃 Хамгийн ойр таамгууд </h3>
 
-        <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "10vh" }}>
           {sortedHistory.map((item, index) => (
-            <li key={index} style={{ marginBottom: "12px" }}>
+            <li key={index} style={{ marginBottom: "12vh" }}>
               <div style={{
                 display: "flex",
                 justifyContent: "space-between",
-                marginBottom: "4px",
+                marginBottom: "4vh",
                 fontWeight: "bold",
               }}>
                 <span>{item.word}</span>
@@ -441,14 +441,14 @@ style={{
 
               <div style={{
                 width: "100%",
-                height: "14px",
+                height: "14vh",
                 background: darkMode ? "#333" : "#ddd",
                 borderRadius: "999px",
                 overflow: "hidden",
               }}>
                 <div style={{
                   width: `${item.score}%`,
-                  height: "100%",
+                  height: "100vh",
                   borderRadius: "999px",
                   background:
                   item.score >= 80
@@ -466,24 +466,24 @@ style={{
         </ul>
           <div style={{ 
             textAlign: "center",
-            padding: "12px",
+            padding: "12rem",
             borderRadius: "12px",
             background: darkMode ? "#181818" : "#eee",
             border: darkMode ? "1px solid #232323" : "none",
             marginTop: "15px",
             fontWeight: "bold",
-            fontSize: "18px",
+            fontSize: "18rem",
           }}>
             <div>Дараагийн үг гарах хүртэл</div>
-            <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "5px" }}>{timeLeft}</div>
+            <div style={{ fontSize: "22rem", fontWeight: "bold", marginTop: "5rem" }}>{timeLeft}</div>
           </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "20px", justifyContent: "center" }}>
-          <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
+        <div style={{ display: "flex", gap: "10px", marginTop: "20rem", justifyContent: "center" }}>
+          <button onClick={() => setDarkMode(!darkMode)} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
             {darkMode ? "☀️" : "🌙"}
           </button>
           
           {isSolved && (
-            <button onClick={handleShare} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
+            <button onClick={handleShare} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
               📤 
             </button>
           )}
@@ -491,14 +491,14 @@ style={{
           <button
           onClick={() => setShowLeaderboard(true)}
           style={{
-            padding: "10px 15px",
+            padding: "10rem 15rem",
              borderRadius: "8px",
              cursor: "pointer"
              }}
              > 🏆 </button>
 
 
-          <button onClick={() => setShowStats(true)} style={{ padding: "10px 15px", borderRadius: "8px", cursor: "pointer" }}>
+          <button onClick={() => setShowStats(true)} style={{ padding: "10rem 15rem", borderRadius: "8px", cursor: "pointer" }}>
             📊
           </button>
           
@@ -510,7 +510,7 @@ style={{
               top: 0,
               left: 0,
               width: "90%",
-              height: "90%",
+              height: "90vh",
               background: "rgba(0,0,0,0.7)",
               display: "flex",
               justifyContent: "center",
@@ -524,7 +524,7 @@ style={{
                 color: darkMode ? "#fff" : "#000",
                 padding: "25px",
                 borderRadius: "12px",
-                minWidth: "300px",
+                minWidth: "300%",
                 maxHeight: "80vh",
                 overflowY: "auto",
                 position: "relative",
@@ -537,7 +537,7 @@ style={{
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    padding: "8px 0",
+                    padding: "8rem 0",
                     borderBottom: "1px solid #444"
                   }}
                   >
@@ -563,7 +563,7 @@ style={{
                       border: "none",
                       background: "transparent",
                       color: darkMode ? "white" : "black",
-                      fontSize: "20px",
+                      fontSize: "20rem",
                       cursor: "pointer",
                     }}
                     > X </button>
@@ -579,7 +579,7 @@ style={{
           }}>
             <div onClick={(e) => e.stopPropagation()} style={{
               background: darkMode ? "#222" : "#fff", color: darkMode ? "#fff" : "#000",
-              padding: "25px", borderRadius: "12px", minWidth: "300px", position: "relative",
+              padding: "25rem", borderRadius: "12px", minWidth: "300%", position: "relative",
             }}>
               <h2 style={{ textAlign: "center", marginBottom: "15px" }}>Статистик</h2>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "15px", textAlign: "center" }}> 
@@ -592,7 +592,7 @@ style={{
               
               <button onClick={() => setShowStats(false)} style={{
                 position: "absolute", top: "10px", right: "10px", border: "none",
-                background: "transparent", color: darkMode ? "white" : "black", fontSize: "20px", cursor: "pointer",
+                background: "transparent", color: darkMode ? "white" : "black", fontSize: "20rem", cursor: "pointer",
               }}>X</button>
            
            </div>
