@@ -118,7 +118,7 @@ loadPlayer();
   }, [score]);
 
   const earnedPoints = Math.max(
-    10 - Math.floor(tries / 5),
+    10 - Math.floor(tries / 10),
     5
   );
 
